@@ -1,0 +1,29 @@
+import requests
+import pandas as pd
+
+# Realizar la solicitud GET a la API para obtener los datos de un Pokémon específico
+pokemon_id = 1  # ID del Pokémon que deseas obtener
+url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_id}/'
+response = requests.get(url)
+
+# Verificar si la solicitud fue exitosa (código de estado 200)
+if response.status_code == 200:
+    # Obtener el contenido JSON en forma de diccionario
+    json_data = response.json()
+    
+    # Extraer los datos necesarios del JSON
+    pokemon_name = json_data['name']
+    pokemon_height = json_data['height']
+    pokemon_weight = json_data['weight']
+    
+    # Crear un DataFrame a partir de los datos extraídos
+    data = {'Name': [pokemon_name], 'Height': [pokemon_height], 'Weight': [pokemon_weight]}
+    df = pd.DataFrame(data)
+    
+    # Guardar el DataFrame en formato CSV
+    df.to_csv('pokemon_data.csv', index=False)
+    
+    # Imprimir el contenido JSON
+    print(response.text)
+else:
+    print('No se pudo obtener los datos. Código de estado:', response.status_code)
